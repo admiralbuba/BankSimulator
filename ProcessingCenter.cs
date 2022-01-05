@@ -9,8 +9,9 @@
         {
             using ApplicationContext db = new();
             db.Transactions.Add(transaction);
-            TransactionQueue.Enqueue(transaction);
             db.SaveChanges();
+            TransactionQueue.Enqueue(transaction);
+            Notify?.Invoke($"Транзакция {db.Transactions.OrderBy(x => x.Id).Last().Id} зарегистрирована");
         }
         public void Stop()
         {
@@ -26,13 +27,13 @@
                 while (IsStopped)
                 {
                     Thread.Sleep(100);
-                    try
+                    if(TransactionQueue.Count > 0)  
                     {
                         var transaction = TransactionQueue.Dequeue();
                         if (transaction != null)
                         {
                             using ApplicationContext db = new();
-                            Notify?.Invoke($"Обрабатывается транзакция {transaction.Id}");
+                            Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.OrderBy(x => x.Id).Last().Id}");
                             Account from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
                             Account to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
 
@@ -43,7 +44,7 @@
                                     from.Sum -= transaction.Sum;
                                     to.Sum += transaction.Sum;
                                     Notify?.Invoke($"Со счета {transaction.AccountIdFrom} поступила сумма {transaction.Sum} на счет {transaction.AccountIdTo}");
-                                    var trns = db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault();
+                                    var trns = db.Transactions.OrderBy(x => x.Id).Last();
                                     if (trns != null)
                                         trns.IsSuccessfull = true;
 
@@ -55,10 +56,6 @@
                                 }
                             }
                         }
-                    }
-                    catch (InvalidOperationException ex)
-                    {
-
                     }
                 }
             });
