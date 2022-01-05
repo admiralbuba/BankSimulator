@@ -1,9 +1,11 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using BankSimulator.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace BankSimulator
 {
     public class ApplicationContext : DbContext
     {
+        public DbSet<Bank> Banks { get; set; } = null!;
         public DbSet<Client> Clients { get; set; } = null!;
         public DbSet<Account> Accounts { get; set; } = null!;
         public DbSet<Card> Cards { get; set; } = null!;

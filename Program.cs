@@ -1,37 +1,39 @@
 ﻿using BankSimulator;
+using BankSimulator.Models;
 using Microsoft.EntityFrameworkCore;
 
 using (ApplicationContext db = new())
 {
     ProcessingCenter pc = new();
-    pc.Start();
+    Task.Run(() => pc.Start());
     pc.Notify += Console.WriteLine;
-    //Client client = new() { Name = "Kate" };
-    //Client client1 = new() { Name = "Mary" };
 
+    Bank bank = new("Prior");
+    Client client = new() { Name = "Kate", Bank = bank, BankId = bank.Id };
+    Client client1 = new() { Name = "Mary", Bank = bank, BankId = bank.Id };
+    Account account = new() { Id = 1, ClientId = client.Id, Client = client, Card = new(), Sum = 50 };
+    Account account1 = new() { Id = 2, ClientId = client1.Id, Client = client1, Card = new() };
+    Card card1 = new() { Account = account , AccountId = account.Id};
+    Card card2 = new() { Account = account1, AccountId = account1.Id };
+
+    //db.Banks.Add(bank);
     //db.Clients.Add(client);
     //db.Clients.Add(client1);
-
-    //db.Accounts.Add(new Account { Id = 1, ClientId = client.Id, Client = client });
-    //db.Accounts.Add(new Account { Id = 2, ClientId = client1.Id, Client = client1 });
-    //db.SaveChanges();
-
-    //Account from = db.Accounts.Where(x => x.Id == 1).FirstOrDefault();
-    //from.Card = new();
-    //Account to = db.Accounts.Where(x => x.Id == 2).FirstOrDefault();
-    //to.Card = new();
-
-    //from.Sum = 50;
+    //db.Accounts.Add(account);
+    //db.Accounts.Add(account1);
+    //db.Cards.Add(card1);
+    //db.Cards.Add(card2);
     //db.SaveChanges();
 
     var cards = db.Cards
         .Include(c => c.Account)
             .ThenInclude(a => a.Client)
+                .ThenInclude(cl => cl.Bank)
             .ToList();
     Console.WriteLine("Список карт:");
     foreach (Card card in cards)
     {
-        Console.WriteLine($"{card.Account.Client.Name} - {card.CardNumber}");
+        Console.WriteLine($"{card.Account.Client.Name} - {card.CardNumber} в банке {card.Account.Client.Bank.Name}");
     }
 
     var clients = db.Clients.ToList();
@@ -41,10 +43,13 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-
+    // 1 = 7254131580160274    2 =  7868168208425026
     pc.Stop();
-    pc.RegisterTransaction(new Transaction { AccountIdFrom = 2, AccountIdTo = 1, Sum = 50 });
-    pc.Start();
+    card1.TransactTo("7868168208425026", 50, pc);
+    card2.TransactTo("7254131580160274", 100, pc);
+    Task.Run(() => pc.Start());
+    account.TransactTo(2, 50, pc);
+    account1.TransactTo(1, 50, pc);
 }
 
 using (ApplicationContext db = new())
@@ -57,6 +62,4 @@ using (ApplicationContext db = new())
         Console.WriteLine($"{u.Id} - {u.Sum} {u.IsSuccessfull}");
     }
 }
-
-
-    Console.ReadKey();
+Console.ReadKey();
