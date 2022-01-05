@@ -4,7 +4,7 @@
     {
         public event Action<string>? Notify;
         public Queue<Transaction> TransactionQueue { get; set; } = new();
-        public bool IsStopped { get; set; }
+        public bool IsStarted { get; set; }
         public void RegisterTransaction(Transaction transaction)
         {
             using ApplicationContext db = new();
@@ -15,16 +15,16 @@
         }
         public void Stop()
         {
-            IsStopped = false;
+            IsStarted = false;
             Notify?.Invoke("Центр остановлен");
         }
         public void Start()
         {
-            IsStopped = true;
+            IsStarted = true;
             Notify?.Invoke("Центр запущен");
             Task.Run(() =>
             {
-                while (IsStopped)
+                while (IsStarted)
                 {
                     Thread.Sleep(100);
                     if(TransactionQueue.Count > 0)  
