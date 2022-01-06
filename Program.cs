@@ -8,7 +8,7 @@ using (ApplicationContext db = new())
     Task.Run(() => pc.Start());
     pc.Notify += Console.WriteLine;
 
-    Bank bank = new("Prior");
+    Bank bank = new("Prior", pc);
     Client client = new() { Name = "Kate", Bank = bank, BankId = bank.Id };
     Client client1 = new() { Name = "Mary", Bank = bank, BankId = bank.Id };
     Account account = new() { Id = 1, ClientId = client.Id, Client = client, Card = new(), Sum = 50 };
@@ -43,13 +43,13 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 7254131580160274    2 =  7868168208425026
+    // 1 = 8264371844381680    2 =  1774378323381238
     pc.Stop();
-    card1.TransactTo("7868168208425026", 50, pc);
-    card2.TransactTo("7254131580160274", 100, pc);
+    card1.TransactTo("1774378323381238", 50);
+    card2.TransactTo("8264371844381680", 100);
     Task.Run(() => pc.Start());
-    account.TransactTo(2, 50, pc);
-    account1.TransactTo(1, 50, pc);
+    account.TransactTo(2, 50);
+    account1.TransactTo(1, 50);
 }
 
 using (ApplicationContext db = new())

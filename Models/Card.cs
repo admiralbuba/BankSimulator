@@ -12,10 +12,10 @@ namespace BankSimulator
         {
             CardNumber = new CardNumberGenerator().GenerateCardNumber();
         }
-        public void TransactTo(string cardNumber, int sum, ProcessingCenter center)
+        public void TransactTo(string cardNumber, int sum)
         {
             var fromId = this.Account.Id;
-            this.Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum, center);
+            this.Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum);
         }
     }
 }

@@ -15,10 +15,10 @@ namespace BankSimulator
         public int ClientId { get; set; }
         public Client Client { get; set; }
 
-        public void TransactTo(int AccountId, int sum, ProcessingCenter center)
+        public void TransactTo(int AccountId, int sum)
         {
             var fromId = this.Id;
-            this.Client.Bank.RegisterTransaction(fromId, AccountId, sum, center);
+            this.Client.Bank.RegisterTransaction(fromId, AccountId, sum);
         }
     }
 }

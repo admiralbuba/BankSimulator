@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,7 +9,8 @@ namespace BankSimulator.Models
 {
     public class Bank
     {
-        private ProcessingCenter processingCenter;
+        [NotMapped]
+        public ProcessingCenter ProcessingCenter { get; set; }
         public int Id { get; set; }
         public string? Name { get; set; }
         public List<Client>? Clients { get; set; } = null!;
@@ -16,17 +18,22 @@ namespace BankSimulator.Models
         {
             Name = name;
         }
-        public void RegisterTransaction(int accountIdfrom, string cardNumberTo, int sum, ProcessingCenter center)
+        public Bank(string name, ProcessingCenter processingCenter)
+        {
+            Name = name;
+            ProcessingCenter = processingCenter;
+        }
+        public void RegisterTransaction(int accountIdfrom, string cardNumberTo, int sum)
         {
             using (ApplicationContext db = new())
             {
                 var account = db.Accounts.Where(x => x.Card.CardNumber == cardNumberTo).FirstOrDefault();
-                center.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = account.Id, Sum = sum });
+                ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = account.Id, Sum = sum });
             }
         }
-        public void RegisterTransaction(int accountIdfrom, int accountIdTo, int sum, ProcessingCenter center)
+        public void RegisterTransaction(int accountIdfrom, int accountIdTo, int sum)
         {
-            center.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = accountIdTo, Sum = sum });
+            ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = accountIdTo, Sum = sum });
         }
     }
 }

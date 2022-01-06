@@ -19,5 +19,9 @@ namespace BankSimulator
         {
             optionsBuilder.UseSqlite("Data Source=helloapp.db");
         }
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Bank>().Ignore(b => b.ProcessingCenter);
+        }
     }
 }
