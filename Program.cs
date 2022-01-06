@@ -11,11 +11,17 @@ using (ApplicationContext db = new())
     Bank bank = new("Prior", pc);
     Client client = new() { Name = "Kate", Bank = bank, BankId = bank.Id };
     Client client1 = new() { Name = "Mary", Bank = bank, BankId = bank.Id };
+    Client client2 = new() { Name = "Market", Bank = bank, BankId = bank.Id };
     Account account = new() { Id = 1, ClientId = client.Id, Client = client, Card = new(), Sum = 50 };
     Account account1 = new() { Id = 2, ClientId = client1.Id, Client = client1, Card = new() };
-    Card card1 = new() { Account = account , AccountId = account.Id};
+    Account account2 = new() { Id = 3, ClientId = client2.Id, Client = client2, Card = new() };
+    Card card1 = new() { Account = account, AccountId = account.Id };
     Card card2 = new() { Account = account1, AccountId = account1.Id };
+    Market market = new() { Id = 1, Name = "Coffee", AccountId = 3, Account = account2 };
 
+
+    var bankDb = db.Banks.Where(b => b.Id == 1).FirstOrDefault();
+    bank.ProcessingCenter = pc;
     //db.Banks.Add(bank);
     //db.Clients.Add(client);
     //db.Clients.Add(client1);
@@ -43,13 +49,14 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 8264371844381680    2 =  1774378323381238
+    // 1 = 8534258358520882    2 =  4348416884556789
     pc.Stop();
-    card1.TransactTo("1774378323381238", 50);
-    card2.TransactTo("8264371844381680", 100);
+    card1.TransactTo("4348416884556789", 50);
+    card2.TransactTo("8534258358520882", 100);
     Task.Run(() => pc.Start());
     account.TransactTo(2, 50);
     account1.TransactTo(1, 50);
+    market.PayFor("4348416884556789", 50);
 }
 
 using (ApplicationContext db = new())

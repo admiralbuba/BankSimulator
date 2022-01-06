@@ -14,7 +14,6 @@
                 db.SaveChanges();
                 TransactionQueue.Enqueue(transaction);
                 Notify?.Invoke($"Транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id} зарегистрирована");
-
             }
         }
         public void Stop()
