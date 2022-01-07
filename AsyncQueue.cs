@@ -19,10 +19,8 @@ namespace BankSimulator
         {
             while (true)
             {
-                if(!Flag)
-                    return null;
-                else if (queue.Count > 0)
-                    return queue.Dequeue();
+                if(!Flag) return null;
+                else if (queue.Count > 0) return queue.Dequeue();
             }
         }
     }

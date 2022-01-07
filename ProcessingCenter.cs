@@ -37,7 +37,7 @@ namespace BankSimulator
                 {
                     using ApplicationContext db = new();
                     Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id}");
-                    Account? from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
+                    Account? from = db.Accounts.Where(x => x.Id == 5).FirstOrDefault();
                     Account? to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
 
                     if (from == null || to == null)

@@ -40,7 +40,7 @@ using (ApplicationContext db = new())
     pc.Stop();
     card1.TransactTo("2178021011015805", 50);
     card2.TransactTo("6382022434177845", 100);
-    //Task.Run(() => pc.StartAsync());
+    Task.Run(() => pc.StartAsync());
     //account.TransactTo(2, 50);
     //account1.TransactTo(1, 50);
     //market.PayFor("6382022434177845", 50);
