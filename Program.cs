@@ -38,13 +38,13 @@ using (ApplicationContext db = new())
     }
     // 1 = 6382022434177845    2 =  2178021011015805
     pc.Stop();
-    //card1.TransactTo("2178021011015805", 50);
-    //card2.TransactTo("6382022434177845", 100);
-
-    //account.TransactTo(2, 50);
-    //account1.TransactTo(1, 50);
-    //market.PayFor("6382022434177845", 50);
+    card1.TransactTo("2178021011015805", 50);
+    card2.TransactTo("6382022434177845", 100);
     Task.Run(() => pc.Start());
+    account.TransactTo(2, 50);
+    account1.TransactTo(1, 50);
+    market.PayFor("6382022434177845", 50);
+
 }
 
 using (ApplicationContext db = new())
