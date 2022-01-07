@@ -1,9 +1,12 @@
-﻿namespace BankSimulator
+﻿using System.Collections.Concurrent;
+
+namespace BankSimulator
 {
     public class ProcessingCenter
     {
         public event Action<string>? Notify;
         public Queue<Transaction> TransactionQueue { get; set; } = new();
+        public AsyncQueue<Transaction> TransactionQueueAsync { get; set; } = new();
         public bool IsStarted { get; set; }
         public void RegisterTransaction(Transaction transaction)
         {
@@ -12,7 +15,7 @@
                 using ApplicationContext db = new();
                 db.Transactions.Add(transaction);
                 db.SaveChanges();
-                TransactionQueue.Enqueue(transaction);
+                TransactionQueueAsync.Enqueue(transaction);
                 Notify?.Invoke($"Транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id} зарегистрирована");
             }
         }
@@ -21,35 +24,46 @@
             IsStarted = false;
             Notify?.Invoke("Центр остановлен");
         }
-        public void Start()
+        public async void Start()
         {
             IsStarted = true;
             Notify?.Invoke("Центр запущен");
-            while (IsStarted && TransactionQueue.Count > 0)
+            while (IsStarted)
             {
-                var transaction = TransactionQueue.Dequeue();
-                if (transaction != null)
+                var trans = await TransactionQueueAsync.DequeueAsync();
+                if (TransactionQueue.Count > 0)
                 {
-                    using ApplicationContext db = new();
-                    Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id}");
-                    Account from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
-                    Account to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
-
-                    if (from != null && to != null)
+                    var transaction = TransactionQueue.Dequeue();
+                    if (transaction != null)
                     {
-                        if (from.Sum >= transaction.Sum)
+                        using ApplicationContext db = new();
+                        Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id}");
+                        Account? from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
+                        Account? to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
+
+                        if (from == null || to == null)
                         {
-                            from.Sum -= transaction.Sum;
-                            to.Sum += transaction.Sum;
-                            var trns = db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault();
-                            if (trns != null)
-                                trns.IsSuccessfull = true;
-                            db.SaveChanges();
-                            Notify?.Invoke($"Со счета {transaction.AccountIdFrom} поступила сумма {transaction.Sum} на счет {transaction.AccountIdTo}");
+                            if(from == null)
+                                Notify?.Invoke($"Счет {transaction.AccountIdFrom} не существует");
+                            if (to == null)
+                                Notify?.Invoke($"Счет {transaction.AccountIdTo} не существует");
                         }
                         else
                         {
-                            Notify?.Invoke($"Недостаточно средств на счете {transaction.AccountIdFrom} для отправки {transaction.Sum} на счет {transaction.AccountIdTo}");
+                            if (from.Sum >= transaction.Sum)
+                            {
+                                from.Sum -= transaction.Sum;
+                                to.Sum += transaction.Sum;
+                                var trns = db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault();
+                                if (trns != null)
+                                    trns.IsSuccessfull = true;
+                                db.SaveChanges();
+                                Notify?.Invoke($"Со счета {transaction.AccountIdFrom} поступила сумма {transaction.Sum} на счет {transaction.AccountIdTo}");
+                            }
+                            else
+                            {
+                                Notify?.Invoke($"Недостаточно средств на счете {transaction.AccountIdFrom} для отправки {transaction.Sum} на счет {transaction.AccountIdTo}");
+                            }
                         }
                     }
                 }
