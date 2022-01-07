@@ -5,20 +5,20 @@ using Microsoft.EntityFrameworkCore;
 using (ApplicationContext db = new())
 {
     ProcessingCenter pc = new();
-    Task.Run(() => pc.Start());
+    Task.Run(() => pc.StartAsync());
     pc.Notify += Console.WriteLine;
 
     Bank bank = db.Banks.FirstOrDefault(b => b.Id == 1);
     bank.ProcessingCenter = pc;
-    Client client = db.Clients.FirstOrDefault(c => c.Id == 1);
-    Client client1 = db.Clients.FirstOrDefault(c => c.Id == 2);
-    Client client2 = db.Clients.FirstOrDefault(c => c.Id == 3);
-    Account account = db.Accounts.FirstOrDefault(a => a.Id == 1);
-    Account account1 = db.Accounts.FirstOrDefault(a => a.Id == 2);
-    Account account2 = db.Accounts.FirstOrDefault(a => a.Id == 3);
-    Card card1 = db.Cards.FirstOrDefault(c => c.Id == 1);
-    Card card2 = db.Cards.FirstOrDefault(c => c.Id == 2);
-    Market market = db.Markets.FirstOrDefault(m => m.Id == 1);
+    Client? client = db.Clients.FirstOrDefault(c => c.Id == 1);
+    Client? client1 = db.Clients.FirstOrDefault(c => c.Id == 2);
+    Client? client2 = db.Clients.FirstOrDefault(c => c.Id == 3);
+    Account? account = db.Accounts.FirstOrDefault(a => a.Id == 1);
+    Account? account1 = db.Accounts.FirstOrDefault(a => a.Id == 2);
+    Account? account2 = db.Accounts.FirstOrDefault(a => a.Id == 3);
+    Card? card1 = db.Cards.FirstOrDefault(c => c.Id == 1);
+    Card? card2 = db.Cards.FirstOrDefault(c => c.Id == 2);
+    Market? market = db.Markets.FirstOrDefault(m => m.Id == 1);
 
     var cards = db.Cards
         .Include(c => c.Account)
@@ -40,10 +40,10 @@ using (ApplicationContext db = new())
     pc.Stop();
     card1.TransactTo("2178021011015805", 50);
     card2.TransactTo("6382022434177845", 100);
-    Task.Run(() => pc.Start());
-    account.TransactTo(2, 50);
-    account1.TransactTo(1, 50);
-    market.PayFor("6382022434177845", 50);
+    //Task.Run(() => pc.StartAsync());
+    //account.TransactTo(2, 50);
+    //account1.TransactTo(1, 50);
+    //market.PayFor("6382022434177845", 50);
 
 }
 

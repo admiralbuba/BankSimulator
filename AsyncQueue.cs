@@ -9,6 +9,7 @@ namespace BankSimulator
     public class AsyncQueue<T> where T : class
     {
         private Queue<T> queue { get; set; } = new();
+        public bool Flag { get; set; } = true;
         public void Enqueue(T item) => queue.Enqueue(item);
         public async Task<T> DequeueAsync()
         {
@@ -18,7 +19,9 @@ namespace BankSimulator
         {
             while (true)
             {
-                if (queue.Count > 0)
+                if(!Flag)
+                    return null;
+                else if (queue.Count > 0)
                     return queue.Dequeue();
             }
         }
