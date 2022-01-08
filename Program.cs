@@ -1,7 +1,6 @@
 ﻿using BankSimulator;
 using BankSimulator.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics;
 
 using (ApplicationContext db = new())
 {

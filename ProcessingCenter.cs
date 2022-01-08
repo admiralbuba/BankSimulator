@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-
-namespace BankSimulator
+﻿namespace BankSimulator
 {
     public class ProcessingCenter
     {
@@ -30,7 +28,7 @@ namespace BankSimulator
             Notify?.Invoke("Центр запущен");
             while (IsStarted)
             {
-                if(TransactionQueue.Count > 0)
+                if (TransactionQueue.Count > 0)
                 {
                     var transaction = TransactionQueue.Dequeue();
                     if (transaction != null)
@@ -66,7 +64,6 @@ namespace BankSimulator
                         }
                     }
                 }
-
             }
         }
     }

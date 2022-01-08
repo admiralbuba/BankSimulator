@@ -1,5 +1,4 @@
-﻿
-namespace BankSimulator
+﻿namespace BankSimulator
 {
     public class Card
     {
