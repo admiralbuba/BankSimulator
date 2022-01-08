@@ -1,11 +1,12 @@
 ﻿using BankSimulator;
 using BankSimulator.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics;
 
 using (ApplicationContext db = new())
 {
     ProcessingCenter pc = new();
-    Task.Run(() => pc.StartAsync());
+    Task.Run(() => pc.Start());
     pc.Notify += Console.WriteLine;
 
     Bank bank = db.Banks.FirstOrDefault(b => b.Id == 1);
@@ -36,13 +37,13 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Name} - {u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 6382022434177845    2 =  2178021011015805
-    pc.Stop();
-    card1.TransactTo("2178021011015805", 50);
-    card2.TransactTo("6382022434177845", 100);
-    Task.Run(() => pc.StartAsync());
-    //account.TransactTo(2, 50);
-    //account1.TransactTo(1, 50);
+    // 1 = 1247674280376271    2 =  4042881032050648
+    //pc.Stop();
+    //Task.Run(() => pc.StartAsync());
+    //card1.TransactTo("2178021011015805", 50);
+    //card2.TransactTo("6382022434177845", 100);
+    account.TransactTo(2, 50);
+    account1.TransactTo(1, 50);
     //market.PayFor("6382022434177845", 50);
 
 }
@@ -52,6 +53,11 @@ using (ApplicationContext db = new())
     Thread.Sleep(1000);
     var transactions = db.Transactions.ToList();
     Console.WriteLine("Список транзакций:");
+
+    //Parallel.ForEach(transactions, (u) =>
+    //{
+    //    Console.WriteLine($"{u.Id} - {u.Sum} {u.IsSuccessfull}");
+    //});
     foreach (Transaction u in transactions)
     {
         Console.WriteLine($"{u.Id} - {u.Sum} {u.IsSuccessfull}");

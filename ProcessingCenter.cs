@@ -24,7 +24,7 @@ namespace BankSimulator
             IsStarted = false;
             Notify?.Invoke("Центр остановлен");
         }
-        public async void StartAsync()
+        public void Start()
         {
             IsStarted = true;
             Notify?.Invoke("Центр запущен");
