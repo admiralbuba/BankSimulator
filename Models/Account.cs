@@ -1,4 +1,6 @@
-﻿namespace BankSimulator
+﻿using System.Text.Json.Serialization;
+
+namespace BankSimulator
 {
     public class Account
     {
@@ -7,6 +9,7 @@
         public Card? Card { get; set; }
         public bool IsBlocked { get; set; } = false;
         public int ClientId { get; set; }
+        [JsonIgnore]
         public Client Client { get; set; }
 
         public void TransactTo(int AccountId, int sum)

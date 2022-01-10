@@ -1,10 +1,12 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace BankSimulator.Models
 {
     public class Bank
     {
         [NotMapped]
+        [JsonIgnore]
         public ProcessingCenter ProcessingCenter { get; set; }
         public int Id { get; set; }
         public string? Name { get; set; }

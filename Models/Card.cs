@@ -1,4 +1,6 @@
-﻿namespace BankSimulator
+﻿using System.Text.Json.Serialization;
+
+namespace BankSimulator
 {
     public class Card
     {
@@ -6,6 +8,7 @@
         public string CardNumber { get; set; }
 
         public int AccountId { get; set; }
+        [JsonIgnore]
         public Account Account { get; set; }
         public Card()
         {

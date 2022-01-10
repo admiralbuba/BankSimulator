@@ -1,4 +1,6 @@
 ﻿using BankSimulator.Models;
+using System.Text.Json.Serialization;
+
 namespace BankSimulator
 {
     public class Client
@@ -8,6 +10,7 @@ namespace BankSimulator
         public List<Account>? Accounts { get; set; } = null!;
 
         public int BankId { get; set; }
+        [JsonIgnore]
         public Bank Bank { get; set; }
     }
 }
