@@ -43,11 +43,11 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Name} - {u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 0420521532154173    2 =  3385214145346702
+    // 1 = 3255351703585185    2 =  1404082264881143
     //pc.Stop();
     //Task.Run(() => pc.StartAsync());
-    //card1.TransactTo("3385214145346702", 50);
-    //card2.TransactTo("0420521532154173", 100);
+    //card1.TransactTo("1404082264881143", 50);
+    //card2.TransactTo("3255351703585185", 100);
     account.TransactTo(2, 50);
     account1.TransactTo(1, 50);
     //market.PayFor("0420521532154173", 50);
