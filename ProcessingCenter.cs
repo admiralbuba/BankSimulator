@@ -22,12 +22,13 @@
             IsStarted = false;
             Notify?.Invoke("Центр остановлен");
         }
-        public void Start()
+        public async void Start()
         {
             IsStarted = true;
             Notify?.Invoke("Центр запущен");
             while (IsStarted)
             {
+
                 if (TransactionQueue.Count > 0)
                 {
                     var transaction = TransactionQueue.Dequeue();
