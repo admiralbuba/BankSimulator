@@ -15,6 +15,7 @@ namespace BankSimulator.Models
         public int AccountId { get; set; }
         [JsonIgnore]
         public Account Account { get; set; }
+        public List<Product> Products { get; set; } = new();
 
         public void PayFor(string cardNumber, int sum)
         {

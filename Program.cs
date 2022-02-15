@@ -19,7 +19,14 @@ using (ApplicationContext db = new())
     Card? card1 = db.Cards.FirstOrDefault(c => c.Id == 1);
     Card? card2 = db.Cards.FirstOrDefault(c => c.Id == 2);
     Market? market = db.Markets.FirstOrDefault(m => m.Id == 1);
+    Product? product = db.Products.FirstOrDefault(m => m.Id == 1);
+    //market.Products.Add(product);
+    //db.SaveChanges();
 
+    foreach(Product prdct in market.Products)
+    {
+        Console.WriteLine(prdct);
+    }
     var cards = db.Cards
         .Include(c => c.Account)
             .ThenInclude(a => a.Client)
@@ -36,14 +43,14 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Name} - {u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 1247674280376271    2 =  4042881032050648
+    // 1 = 0420521532154173    2 =  3385214145346702
     //pc.Stop();
     //Task.Run(() => pc.StartAsync());
-    //card1.TransactTo("2178021011015805", 50);
-    //card2.TransactTo("6382022434177845", 100);
+    //card1.TransactTo("3385214145346702", 50);
+    //card2.TransactTo("0420521532154173", 100);
     account.TransactTo(2, 50);
     account1.TransactTo(1, 50);
-    //market.PayFor("6382022434177845", 50);
+    //market.PayFor("0420521532154173", 50);
 
 }
 

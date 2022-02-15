@@ -11,6 +11,7 @@ namespace BankSimulator
         public DbSet<Card> Cards { get; set; } = null!;
         public DbSet<Transaction> Transactions { get; set; } = null!;
         public DbSet<Market> Markets { get; set; } = null!;
+        public DbSet<Product> Products { get; set; } = null!;
         public ApplicationContext()
         {
             //Database.EnsureDeleted();
@@ -32,7 +33,7 @@ namespace BankSimulator
                     new Client { Name = "Market", Id = 3, BankId = 1 }
                     );
             modelBuilder.Entity<Account>().HasData(
-                    new Account { Id = 1, ClientId = 1, Sum = 50},
+                    new Account { Id = 1, ClientId = 1, Sum = 50 },
                     new Account { Id = 2, ClientId = 2 },
                     new Account { Id = 3, ClientId = 3 }
                     );
@@ -41,8 +42,11 @@ namespace BankSimulator
                     new Card { Id = 2, AccountId = 2 }
                     );
             modelBuilder.Entity<Market>().HasData(
-                new Market { Id = 1, Name = "Coffee", AccountId = 3 }
-                );
+                    new Market { Id = 1, Name = "Coffee", AccountId = 3 }
+                    );
+            modelBuilder.Entity<Product>().HasData(
+                    new Product { Id = 1, Name = "Kawa", Price = 50 }
+                    );
         }
     }
 }
