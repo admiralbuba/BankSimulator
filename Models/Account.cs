@@ -1,4 +1,5 @@
-﻿using System.Text.Json.Serialization;
+﻿using BankSimulator.Exceptions;
+using System.Text.Json.Serialization;
 
 namespace BankSimulator
 {
@@ -16,6 +17,22 @@ namespace BankSimulator
         {
             var fromId = this.Id;
             this.Client.Bank.RegisterTransaction(fromId, AccountId, sum);
+        }
+        public void ChargeSum(double sum)
+        {
+            if (IsBlocked)
+                throw new AccountBlockedException($"Аккаунт {Id} заблокирован");
+            if (Sum >= sum)
+                Sum -= sum;
+            else
+                throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum}");
+        }
+        public void AddSum(double sum)
+        {
+            if (IsBlocked)
+                throw new AccountBlockedException("Аккаунт заблокирован");
+            else
+                Sum += sum;
         }
     }
 }

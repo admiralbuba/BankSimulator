@@ -1,4 +1,6 @@
-﻿namespace BankSimulator
+﻿using BankSimulator.Exceptions;
+
+namespace BankSimulator
 {
     public class ProcessingCenter
     {
@@ -28,40 +30,37 @@
             Notify?.Invoke("Центр запущен");
             while (IsStarted)
             {
-
                 if (TransactionQueue.Count > 0)
                 {
                     var transaction = TransactionQueue.Dequeue();
-                    if (transaction != null)
-                    {
-                        using ApplicationContext db = new();
-                        Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id}");
-                        Account? from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
-                        Account? to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
+                    using ApplicationContext db = new();
+                    Notify?.Invoke($"Обрабатывается транзакция {db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault().Id}");
+                    Account? from = db.Accounts.Where(x => x.Id == transaction.AccountIdFrom).FirstOrDefault();
+                    Account? to = db.Accounts.Where(x => x.Id == transaction.AccountIdTo).FirstOrDefault();
 
-                        if (from == null || to == null)
+                    if (from is null)
+                        Notify?.Invoke($"Счет {transaction.AccountIdFrom} не существует");
+                    if (to is null)
+                        Notify?.Invoke($"Счет {transaction.AccountIdTo} не существует");
+                    else
+                    {
+                        try
                         {
-                            if (from == null)
-                                Notify?.Invoke($"Счет {transaction.AccountIdFrom} не существует");
-                            if (to == null)
-                                Notify?.Invoke($"Счет {transaction.AccountIdTo} не существует");
+                            from.ChargeSum(transaction.Sum);
+                            to.AddSum(transaction.Sum);
+                            var trns = db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault();
+                            if (trns != null)
+                                trns.IsSuccessfull = true;
+                            db.SaveChanges();
+                            Notify?.Invoke($"Со счета {transaction.AccountIdFrom} поступила сумма {transaction.Sum} на счет {transaction.AccountIdTo}");
                         }
-                        else
+                        catch (AccountBlockedException e)
                         {
-                            if (from.Sum >= transaction.Sum)
-                            {
-                                from.Sum -= transaction.Sum;
-                                to.Sum += transaction.Sum;
-                                var trns = db.Transactions.Where(x => x.Id == transaction.Id).FirstOrDefault();
-                                if (trns != null)
-                                    trns.IsSuccessfull = true;
-                                db.SaveChanges();
-                                Notify?.Invoke($"Со счета {transaction.AccountIdFrom} поступила сумма {transaction.Sum} на счет {transaction.AccountIdTo}");
-                            }
-                            else
-                            {
-                                Notify?.Invoke($"Недостаточно средств на счете {transaction.AccountIdFrom} для отправки {transaction.Sum} на счет {transaction.AccountIdTo}");
-                            }
+                            Notify?.Invoke(e.Message);
+                        }
+                        catch (ExceededSumException e)
+                        {
+                            Notify?.Invoke(e.Message + $" на счет {transaction.AccountIdTo}");
                         }
                     }
                 }

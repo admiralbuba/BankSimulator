@@ -6,6 +6,6 @@
         public int AccountIdFrom { get; set; }
         public int AccountIdTo { get; set; }
         public int Sum { get; set; }
-        public bool? IsSuccessfull { get; set; } = null;
+        public bool IsSuccessfull { get; set; } = false;
     }
 }
