@@ -44,7 +44,7 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Name} - {u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 6533614667273479    2 =  8405653212254684
+    // 1 = 8787821426603206    2 =  3875208056148765
     //pc.Stop();
     //Task.Run(() => pc.StartAsync());
     //card1.TransactTo("8405653212254684", 50);

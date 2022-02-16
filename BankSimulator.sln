@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankSimulator", "BankSimula
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankWeb", "..\BankWeb\BankWeb.csproj", "{67869337-BB64-49E6-8413-E759BCAB384B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankDemo", "..\BankDemo\BankDemo.csproj", "{6119D5EE-7433-4282-8F22-5E1938922DC7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankDemo", "..\BankDemo\BankDemo.csproj", "{6119D5EE-7433-4282-8F22-5E1938922DC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

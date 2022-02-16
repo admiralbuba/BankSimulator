@@ -50,9 +50,7 @@ namespace BankSimulator
                     {
                         try
                         {
-                            if (!CancellationToken.IsCancellationRequested)
-                                break;
-                            else if (from.TryChargeSum(transaction.Sum, out string message))
+                            if (from.TryChargeSum(transaction.Sum, out string message))
                             {
                                 if (to.TryAddSum(transaction.Sum, out string msg))
                                 {

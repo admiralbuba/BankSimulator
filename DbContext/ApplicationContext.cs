@@ -50,7 +50,8 @@ namespace BankSimulator
                     new Market { Id = 1, Name = "Coffee", AccountId = 3 }
                     );
             modelBuilder.Entity<Product>().HasData(
-                    new Product { Id = 1, Name = "Kawa", Price = 50 }
+                    new Product { Id = 1, Name = "Kawa", Price = 50, Amount = 100, MarketId = 1 },
+                    new Product { Id = 2, Name = "Harbata", Price = 25, Amount = 100, MarketId = 1 }
                     );
         }
     }
