@@ -16,23 +16,37 @@ namespace BankSimulator
         public void TransactTo(int AccountId, int sum)
         {
             var fromId = this.Id;
-            this.Client.Bank.RegisterTransaction(fromId, AccountId, sum);
+            Client.Bank.RegisterTransaction(fromId, AccountId, sum);
         }
-        public void ChargeSum(double sum)
+        public bool TryChargeSum(double sum, out string message)
         {
             if (IsBlocked)
-                throw new AccountBlockedException($"Аккаунт {Id} заблокирован");
+            {
+                message = $"Аккаунт {Id} заблокирован";
+                return false;
+            }
             if (Sum >= sum)
+            {
+                message = $"Со счета {Id} отправлено {sum}";
                 Sum -= sum;
+                return true;
+            }
             else
                 throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum}");
         }
-        public void AddSum(double sum)
+        public bool TryAddSum(double sum, out string message)
         {
             if (IsBlocked)
-                throw new AccountBlockedException("Аккаунт заблокирован");
+            {
+                message = $"Аккаунт {Id} заблокирован";
+                return false;
+            }
             else
+            {
+                message = $"На счет {Id} поступило {sum}";
                 Sum += sum;
+                return true;
+            }
         }
     }
 }

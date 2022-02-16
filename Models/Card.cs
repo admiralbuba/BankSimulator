@@ -17,7 +17,7 @@ namespace BankSimulator
         public void TransactTo(string cardNumber, int sum)
         {
             var fromId = this.Account.Id;
-            this.Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum);
+            Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum);
         }
     }
 }

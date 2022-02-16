@@ -5,7 +5,9 @@ VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankSimulator", "BankSimulator.csproj", "{66000701-8FA2-49F2-BB65-07EDB3CC96D1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankWeb", "..\BankWeb\BankWeb.csproj", "{67869337-BB64-49E6-8413-E759BCAB384B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BankWeb", "..\BankWeb\BankWeb.csproj", "{67869337-BB64-49E6-8413-E759BCAB384B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BankDemo", "..\BankDemo\BankDemo.csproj", "{6119D5EE-7433-4282-8F22-5E1938922DC7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{67869337-BB64-49E6-8413-E759BCAB384B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{67869337-BB64-49E6-8413-E759BCAB384B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{67869337-BB64-49E6-8413-E759BCAB384B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6119D5EE-7433-4282-8F22-5E1938922DC7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6119D5EE-7433-4282-8F22-5E1938922DC7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6119D5EE-7433-4282-8F22-5E1938922DC7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6119D5EE-7433-4282-8F22-5E1938922DC7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
