@@ -13,6 +13,7 @@ namespace BankSimulator
         [JsonIgnore]
         public Client Client { get; set; }
 
+        public void RollbackTransaction(double sum) => Sum += sum;
         public void TransactTo(int AccountId, int sum)
         {
             var fromId = this.Id;

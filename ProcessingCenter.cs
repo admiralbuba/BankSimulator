@@ -9,7 +9,12 @@ namespace BankSimulator
         public event Action<string>? Notify;
         public Queue<Transaction> TransactionQueue { get; set; } = new();
         public bool IsStarted { get; set; }
-        public CancellationTokenSource CancellationTokenSource { get; set; } = new();
+        private CancellationTokenSource CancellationTokenSource { get; set; } = new();
+        public CancellationToken CancellationToken { get; set; }
+        public ProcessingCenter()
+        {
+            CancellationToken = CancellationTokenSource.Token;
+        }
         public void RegisterTransaction(Transaction transaction)
         {
             lock (TransactionQueue)
@@ -21,16 +26,13 @@ namespace BankSimulator
                 Notify?.Invoke($"Транзакция {db.Transactions.FirstOrDefault(x => x.Id == transaction.Id).Id} зарегистрирована");
             }
         }
-        public void Stop()
-        {
-            IsStarted = false;
-            Notify?.Invoke("Центр остановлен");
-        }
+        public void Stop() => CancellationTokenSource.Cancel();
+
         public void Start()
         {
             IsStarted = true;
             Notify?.Invoke("Центр запущен");
-            while (IsStarted)
+            while (!CancellationToken.IsCancellationRequested)
             {
                 if (TransactionQueue.Count > 0)
                 {
@@ -48,7 +50,9 @@ namespace BankSimulator
                     {
                         try
                         {
-                            if (from.TryChargeSum(transaction.Sum, out string message))
+                            if (!CancellationToken.IsCancellationRequested)
+                                break;
+                            else if (from.TryChargeSum(transaction.Sum, out string message))
                             {
                                 if (to.TryAddSum(transaction.Sum, out string msg))
                                 {
@@ -60,7 +64,10 @@ namespace BankSimulator
                                     TransactionCompleted?.Invoke();
                                 }
                                 else
+                                {
+                                    from.RollbackTransaction(transaction.Sum);
                                     Notify?.Invoke(msg);
+                                }
                             }
                             else
                                 Notify?.Invoke(message);
@@ -72,6 +79,7 @@ namespace BankSimulator
                     }
                 }
             }
+            Notify?.Invoke("Центр остановлен");
         }
     }
 }
