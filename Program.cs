@@ -24,7 +24,7 @@ using (ApplicationContext db = new())
     //market.Products.Add(product);
     //db.SaveChanges();
 
-    foreach(Product prdct in market.Products)
+    foreach (Product prdct in market.Products)
     {
         Console.WriteLine(prdct);
     }

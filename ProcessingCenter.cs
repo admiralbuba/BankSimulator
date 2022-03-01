@@ -8,7 +8,6 @@ namespace BankSimulator
         public event Action? TransactionCompleted;
         public event Action<string>? Notify;
         public Queue<Transaction> TransactionQueue { get; set; } = new();
-        public bool IsStarted { get; set; }
         private CancellationTokenSource CancellationTokenSource { get; set; } = new();
         public CancellationToken CancellationToken { get; set; }
         public ProcessingCenter()
@@ -30,7 +29,6 @@ namespace BankSimulator
 
         public void Start()
         {
-            IsStarted = true;
             Notify?.Invoke("Центр запущен");
             while (!CancellationToken.IsCancellationRequested)
             {
