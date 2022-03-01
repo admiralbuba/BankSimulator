@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +9,7 @@ namespace BankSimulator
 {
     public class CardNumberGenerator
     {
+        public int GenerateCVV2() => new Random().Next(100, 1000);
         public string GenerateCardNumber()
         {
             int[] checkArray = new int[15];

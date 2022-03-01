@@ -6,6 +6,8 @@ namespace BankSimulator
     {
         public int Id { get; set; }
         public string CardNumber { get; set; }
+        public int CVV2 { get; set; }
+        public DateTime ValidUntil { get; set; }
 
         public int AccountId { get; set; }
         [JsonIgnore]
@@ -13,11 +15,22 @@ namespace BankSimulator
         public Card()
         {
             CardNumber = new CardNumberGenerator().GenerateCardNumber();
+            CVV2 = new CardNumberGenerator().GenerateCVV2();
         }
-        public void TransactTo(string cardNumber, int sum)
+        public bool TryTransactTo(string cardNumber, int sum, out string message)
         {
-            var fromId = this.Account.Id;
-            Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum);
+            if (DateTime.Now >= ValidUntil)
+            {
+                message = $"Карта более не действительна";
+                return false;
+            }
+            else
+            {
+                message = $"Зарегистрировано отправление на карту {cardNumber} на сумму {sum}";
+                var fromId = this.Account.Id;
+                Account.Client.Bank.RegisterTransaction(fromId, cardNumber, sum);
+                return true;
+            }
         }
     }
 }
