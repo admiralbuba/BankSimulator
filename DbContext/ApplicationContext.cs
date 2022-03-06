@@ -38,9 +38,9 @@ namespace BankSimulator
                     new Client { Name = "Market", Id = 3, BankId = 1 }
                     );
             modelBuilder.Entity<Account>().HasData(
-                    new Account { Id = 1, ClientId = 1, Sum = 50 },
-                    new Account { Id = 2, ClientId = 2 },
-                    new Account { Id = 3, ClientId = 3 }
+                    new Account { Id = 1, ClientId = 1, Sum = 50, Currency = Enums.Currency.USD },
+                    new Account { Id = 2, ClientId = 2, Currency = Enums.Currency.USD },
+                    new Account { Id = 3, ClientId = 3, Currency = Enums.Currency.BYN }
                     );
             modelBuilder.Entity<Card>().HasData(
                     new Card { Id = 1, AccountId = 1 },

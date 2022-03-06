@@ -1,5 +1,6 @@
 ﻿using BankSimulator.Exceptions;
 using BankSimulator.Extensions;
+using BankSimulator.Helpers;
 
 namespace BankSimulator
 {
@@ -50,7 +51,8 @@ namespace BankSimulator
                         {
                             if (from.TryChargeSum(transaction.Sum, out string message))
                             {
-                                if (to.TryAddSum(transaction.Sum, out string msg))
+                                var sum = CurrencyConverter.ConvertCurrency(from.Currency, to.Currency, transaction.Sum);
+                                if (to.TryAddSum(sum, out string msg))
                                 {
                                     Transaction? trns = db.Transactions.FirstOrDefault(x => x.Id == transaction.Id);
                                     trns.IsSuccessfull = true;

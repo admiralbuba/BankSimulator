@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BankSimulator
 {
-    public class CardNumberGenerator
+    public class CardDataGenerator
     {
         public int GenerateCVV2() => new Random().Next(100, 1000);
         public string GenerateCardNumber()

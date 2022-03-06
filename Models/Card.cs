@@ -14,8 +14,8 @@ namespace BankSimulator
         public Account Account { get; set; }
         public Card()
         {
-            CardNumber = new CardNumberGenerator().GenerateCardNumber();
-            CVV2 = new CardNumberGenerator().GenerateCVV2();
+            CardNumber = new CardDataGenerator().GenerateCardNumber();
+            CVV2 = new CardDataGenerator().GenerateCVV2();
         }
         public bool TryTransactTo(string cardNumber, int sum, out string message)
         {

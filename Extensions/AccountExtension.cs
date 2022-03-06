@@ -8,6 +8,9 @@ namespace BankSimulator.Extensions
 {
     public static class AccountExtension
     {
-        public static Account IsNull(this Account account, int id) => account is null ? throw new ArgumentNullException(id.ToString()) : account;
+        public static void Restrict(this Account account, Action action)
+        {
+
+        }
     }
 }

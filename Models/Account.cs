@@ -1,4 +1,5 @@
-﻿using BankSimulator.Exceptions;
+﻿using BankSimulator.Enums;
+using BankSimulator.Exceptions;
 using System.Text.Json.Serialization;
 
 namespace BankSimulator
@@ -7,6 +8,7 @@ namespace BankSimulator
     {
         public int Id { get; set; }
         public double Sum { get; set; }
+        public Currency Currency { get; set; }
         public Card? Card { get; set; }
         public bool IsBlocked { get; set; } = false;
         public int ClientId { get; set; }
