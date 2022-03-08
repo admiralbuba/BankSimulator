@@ -32,47 +32,47 @@ namespace BankSimulator
             Log.Information("Центр запущен");
             while (!CancellationToken.IsCancellationRequested)
             {
-                    var transaction = await TransactionQueue.DequeueAsync();
-                    using ApplicationContext db = new();
-                    Log.Information("Обрабатывается транзакция {@transaction}", transaction);
-                    Account? from = db.Accounts.FirstOrDefault(x => x.Id == transaction.AccountIdFrom);
-                    Account? to = db.Accounts.FirstOrDefault(x => x.Id == transaction.AccountIdTo);
+                var transaction = await TransactionQueue.DequeueAsync();
+                using ApplicationContext db = new();
+                Log.Information("Обрабатывается транзакция {@transaction}", transaction);
+                Account? from = db.Accounts.FirstOrDefault(x => x.Id == transaction.AccountIdFrom);
+                Account? to = db.Accounts.FirstOrDefault(x => x.Id == transaction.AccountIdTo);
 
-                    if (from is null)
-                        Log.Warning($"Счет {transaction.AccountIdFrom} не существует");
-                    if (to is null)
-                        Log.Warning($"Счет {transaction.AccountIdTo} не существует");
-                    else
+                if (from is null)
+                    Log.Warning($"Счет {transaction.AccountIdFrom} не существует");
+                if (to is null)
+                    Log.Warning($"Счет {transaction.AccountIdTo} не существует");
+                else
+                {
+                    try
                     {
-                        try
+                        if (from.TryChargeSum(transaction.Sum, out string message))
                         {
-                            if (from.TryChargeSum(transaction.Sum, out string message))
+                            var sum = CurrencyConverter.ConvertCurrency(from.Currency, to.Currency, transaction.Sum);
+                            if (to.TryAddSum(sum, out string msg))
                             {
-                                var sum = CurrencyConverter.ConvertCurrency(from.Currency, to.Currency, transaction.Sum);
-                                if (to.TryAddSum(sum, out string msg))
-                                {
-                                    Transaction? trns = db.Transactions.FirstOrDefault(x => x.Id == transaction.Id);
-                                    trns.IsSuccessfull = true;
-                                    db.SaveChanges();
-                                    Log.Information($"{message}. Id Транзакции: {transaction.Id}");
-                                    Log.Information($"{msg}. Id Транзакции: {transaction.Id}");
-                                    Log.Information("Транзакция успешно выполнена {@transaction}", trns);
-                                    TransactionCompleted?.Invoke();
-                                }
-                                else
-                                {
-                                    from.RollbackTransaction(transaction.Sum);
-                                    Log.Information($"{msg}. Id Транзакции: {transaction.Id}");
-                                }
+                                Transaction? trns = db.Transactions.FirstOrDefault(x => x.Id == transaction.Id);
+                                trns.IsSuccessfull = true;
+                                db.SaveChanges();
+                                Log.Information($"{message}. Id Транзакции: {transaction.Id}");
+                                Log.Information($"{msg}. Id Транзакции: {transaction.Id}");
+                                Log.Information("Транзакция успешно выполнена {@transaction}", trns);
+                                TransactionCompleted?.Invoke();
                             }
                             else
-                                Log.Information($"{message}. Id Транзакции: {transaction.Id}");
+                            {
+                                from.RollbackTransaction(transaction.Sum);
+                                Log.Information($"{msg}. Id Транзакции: {transaction.Id}");
+                            }
                         }
-                        catch (ExceededSumException e)
-                        {
-                            Log.Warning(e.Message + $" на счет {transaction.AccountIdTo}");
-                        }
+                        else
+                            Log.Information($"{message}. Id Транзакции: {transaction.Id}");
                     }
+                    catch (ExceededSumException e)
+                    {
+                        Log.Warning(e.Message + $" на счет {transaction.AccountIdTo}");
+                    }
+                }
             }
             Log.Information("Центр остановлен");
         }
