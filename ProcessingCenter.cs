@@ -8,7 +8,7 @@ namespace BankSimulator
     public class ProcessingCenter
     {
         public event Action? TransactionCompleted;
-        public Queue<Transaction> TransactionQueue { get; set; } = new();
+        public AsyncQueue<Transaction> TransactionQueue { get; set; } = new();
         private CancellationTokenSource CancellationTokenSource { get; set; } = new();
         public CancellationToken CancellationToken { get; set; }
         public ProcessingCenter()
@@ -27,14 +27,12 @@ namespace BankSimulator
             }
         }
         public void Stop() => CancellationTokenSource.Cancel();
-        public void Start()
+        public async void StartAsync()
         {
             Log.Information("Центр запущен");
             while (!CancellationToken.IsCancellationRequested)
             {
-                if (TransactionQueue.Count > 0)
-                {
-                    var transaction = TransactionQueue.Dequeue();
+                    var transaction = await TransactionQueue.DequeueAsync();
                     using ApplicationContext db = new();
                     Log.Information("Обрабатывается транзакция {@transaction}", transaction);
                     Account? from = db.Accounts.FirstOrDefault(x => x.Id == transaction.AccountIdFrom);
@@ -75,7 +73,6 @@ namespace BankSimulator
                             Log.Warning(e.Message + $" на счет {transaction.AccountIdTo}");
                         }
                     }
-                }
             }
             Log.Information("Центр остановлен");
         }

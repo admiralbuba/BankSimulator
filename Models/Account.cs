@@ -35,7 +35,7 @@ namespace BankSimulator
                 return true;
             }
             else
-                throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum} в {Currency}");
+                throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum} {Currency}");
         }
         public bool TryAddSum(double sum, out string message)
         {

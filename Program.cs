@@ -14,7 +14,7 @@ Log.Logger = new LoggerConfiguration()
 using (ApplicationContext db = new())
 {
     ProcessingCenter pc = new();
-    Task.Run(() => pc.Start());
+    Task.Run(() => pc.StartAsync());
     pc.TransactionCompleted += () => Console.WriteLine("Транзакция завершена");
 
     Bank bank = db.Banks.FirstOrDefault(b => b.Id == 1);
@@ -52,10 +52,10 @@ using (ApplicationContext db = new())
     {
         Console.WriteLine($"{u.Name} - {u.Id} - {u.Accounts.FirstOrDefault().Sum} ");
     }
-    // 1 = 8787821426603206    2 =  3875208056148765
+    // 1 = 8604666116686859    2 =  5157442474055484
     //pc.Stop();
     //Task.Run(() => pc.StartAsync());
-    //card1.TransactTo("8405653212254684", 50);
+    card1.TryTransactTo("5157442474055484", 50, out string message);
     //card2.TransactTo("6533614667273479", 100);
     account.TransactTo(2, 500);
     account1.TransactTo(1, 50);

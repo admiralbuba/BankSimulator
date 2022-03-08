@@ -42,9 +42,10 @@ namespace BankSimulator
                     new Account { Id = 2, ClientId = 2, Currency = Enums.Currency.USD },
                     new Account { Id = 3, ClientId = 3, Currency = Enums.Currency.BYN }
                     );
+            modelBuilder.Entity<Card>().Ignore(c => c.PaymentSystem);
             modelBuilder.Entity<Card>().HasData(
-                    new Card { Id = 1, AccountId = 1 },
-                    new Card { Id = 2, AccountId = 2 }
+                    new Card { Id = 1, AccountId = 1, ValidUntil = DateTime.MaxValue},
+                    new Card { Id = 2, AccountId = 2, ValidUntil = DateTime.MaxValue }
                     );
             modelBuilder.Entity<Market>().HasData(
                     new Market { Id = 1, Name = "Coffee", AccountId = 3 }

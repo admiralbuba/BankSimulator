@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using Serilog;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Text.Json.Serialization;
 
 namespace BankSimulator.Models
@@ -31,18 +32,27 @@ namespace BankSimulator.Models
             using ApplicationContext db = new();
             var account = db.Accounts.Where(x => x.Card.CardNumber == cardNumberFrom).FirstOrDefault();
             if (account != null)
-                ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = account.Id, AccountIdTo = accountIdto, Sum = sum });
+                ProcessingCenter.RegisterTransaction(new Transaction
+                { AccountIdFrom = account.Id, AccountIdTo = accountIdto, Sum = sum });
         }
         public void RegisterTransaction(int accountIdfrom, string cardNumberTo, double sum)
         {
             using ApplicationContext db = new();
             var account = db.Accounts.Where(x => x.Card.CardNumber == cardNumberTo).FirstOrDefault();
             if (account != null)
-                ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = account.Id, Sum = sum });
+            {
+                var transaction = new Transaction()
+                { AccountIdFrom = accountIdfrom, AccountIdTo = account.Id, Sum = sum };
+                ProcessingCenter.RegisterTransaction(transaction);
+                Log.Information("Банк зарегистрировал транзакцию {@transaction}", transaction);
+            }
+            else
+                Log.Warning($"Карта {cardNumberTo} не существует");
         }
         public void RegisterTransaction(int accountIdfrom, int accountIdTo, double sum)
         {
-            ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = accountIdTo, Sum = sum });
+            ProcessingCenter.RegisterTransaction(new Transaction
+            { AccountIdFrom = accountIdfrom, AccountIdTo = accountIdTo, Sum = sum });
         }
     }
 }
