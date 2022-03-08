@@ -16,7 +16,7 @@ namespace BankSimulator
         public Client Client { get; set; }
 
         public void RollbackTransaction(double sum) => Sum += sum;
-        public void TransactTo(int AccountId, int sum)
+        public void TransactTo(int AccountId, double sum)
         {
             var fromId = this.Id;
             Client.Bank.RegisterTransaction(fromId, AccountId, sum);
@@ -30,12 +30,12 @@ namespace BankSimulator
             }
             if (Sum >= sum)
             {
-                message = $"Со счета {Id} отправлено {sum}";
+                message = $"Со счета {Id} отправлено {sum} в {Currency}";
                 Sum -= sum;
                 return true;
             }
             else
-                throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum}");
+                throw new ExceededSumException($"Недостаточно средств на счете {Id} для отправки {sum} в {Currency}");
         }
         public bool TryAddSum(double sum, out string message)
         {
@@ -46,7 +46,7 @@ namespace BankSimulator
             }
             else
             {
-                message = $"На счет {Id} поступило {sum}";
+                message = $"На счет {Id} поступило {sum} в {Currency}";
                 Sum += sum;
                 return true;
             }

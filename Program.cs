@@ -1,13 +1,20 @@
 ﻿using BankSimulator;
 using BankSimulator.Helpers;
 using BankSimulator.Models;
+using BankSimulator.Utils;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Sinks.SystemConsole.Themes;
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Verbose()
+    .WriteTo.Console(theme: LogTheme.Colored)
+    .CreateLogger();
 
 using (ApplicationContext db = new())
 {
     ProcessingCenter pc = new();
     Task.Run(() => pc.Start());
-    pc.Notify += Console.WriteLine;
     pc.TransactionCompleted += () => Console.WriteLine("Транзакция завершена");
 
     Bank bank = db.Banks.FirstOrDefault(b => b.Id == 1);
@@ -50,7 +57,7 @@ using (ApplicationContext db = new())
     //Task.Run(() => pc.StartAsync());
     //card1.TransactTo("8405653212254684", 50);
     //card2.TransactTo("6533614667273479", 100);
-    account.TransactTo(2, 50);
+    account.TransactTo(2, 500);
     account1.TransactTo(1, 50);
     //market.PayFor("0420521532154173", 50);
 

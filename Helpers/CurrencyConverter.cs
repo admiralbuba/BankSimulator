@@ -20,7 +20,7 @@ namespace BankSimulator.Helpers
         public static double GBPtoEUR = 1.1935;
         public static double GBPtoBYN = 4.1222;
 
-        public static double ConvertCurrency(Currency from, Currency to, int sum)
+        public static double ConvertCurrency(Currency from, Currency to, double sum)
         {
             if (from == to)
                 return sum;

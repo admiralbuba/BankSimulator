@@ -26,21 +26,21 @@ namespace BankSimulator.Models
             ProcessingCenter.RegisterTransaction(transaction);
         }
 
-        public void RegisterTransaction(string cardNumberFrom, int accountIdto, int sum)
+        public void RegisterTransaction(string cardNumberFrom, int accountIdto, double sum)
         {
             using ApplicationContext db = new();
             var account = db.Accounts.Where(x => x.Card.CardNumber == cardNumberFrom).FirstOrDefault();
             if (account != null)
                 ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = account.Id, AccountIdTo = accountIdto, Sum = sum });
         }
-        public void RegisterTransaction(int accountIdfrom, string cardNumberTo, int sum)
+        public void RegisterTransaction(int accountIdfrom, string cardNumberTo, double sum)
         {
             using ApplicationContext db = new();
             var account = db.Accounts.Where(x => x.Card.CardNumber == cardNumberTo).FirstOrDefault();
             if (account != null)
                 ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = account.Id, Sum = sum });
         }
-        public void RegisterTransaction(int accountIdfrom, int accountIdTo, int sum)
+        public void RegisterTransaction(int accountIdfrom, int accountIdTo, double sum)
         {
             ProcessingCenter.RegisterTransaction(new Transaction { AccountIdFrom = accountIdfrom, AccountIdTo = accountIdTo, Sum = sum });
         }
